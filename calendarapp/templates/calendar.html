@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title%}予約フォーム{% endblock %}
+{% block header%}
+<!-- Masthead-->
+<header class="mastheads">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 align-items-center justify-content-center text-center">
+            <div class="col-lg-8 align-self-end">
+                <h1 class="text-black font-weight-bold">さかぱんカフェ</h1>
+                <hr class="divider" />
+            </div>
+            <div class="col-lg-8 align-self-baseline">
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+{% block content%}
+    <div class="container px-4 px-lg-5 ">
+        <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
+            <h1>予約フォーム</h1>
+            <div>※一か月後まで予約を承っています。<br>※キャンセルの場合は店舗まで電話でご連絡ください。<br><hr></div>
+
+                <h1>{{ year }}年{{ month }}月</h1>
+                <div>
+                    {% if is_current_or_next_month %}
+                        <a class="text-center" href="{% url 'calendarapp:calendar_view_month' prev_year prev_month %}">&lt;&lt; 前月</a>
+                    {% endif %}
+                    {% if not is_current_or_next_month %}
+                        <a href="{% url 'calendarapp:calendar_view_month' next_year next_month %}">翌月 &gt;&gt;</a>
+                    {% endif %}
+                </div>
+                <table class="" border="1">
+                    <tr>
+                        {% for day in "日月火水木金土" %}
+                            <th>{{ day }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for week in month_days %}
+                    <tr>
+                        {% for day in week %}
+                            <td class="
+                                {% if day == today %}
+                                    today
+                                {% elif day in store_holidays or day < today or day > thirty_days_later %}
+                                    holiday beyond-thirty-days
+                                {% elif day < today %}
+                                    past
+                                {% endif %}
+                            " onclick="if(!this.classList.contains('holiday') && !this.classList.contains('beyond-thirty-days')) showPopup('{{ day }}')" style="cursor: {% if day >= today and day <= thirty_days_later and day not in store_holidays %}pointer{% else %}not-allowed{% endif %};">
+                                {{ day.day }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+                <div id="popup" class="popup">
+                    <div id="popup-date"></div>
+                    <div>
+                        {% for time in time_slots %}
+                            <button onclick="reserveTime('{{ time }}')">{{ time }}</button>
+                        {% endfor %}
+                    </div>
+                    <button onclick="hidePopup()">閉じる</button>
+                </div>
+                <form id="reservation-form" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="hidden" id="id_date" name="date">
+                    <input type="hidden" id="id_time" name="time">
+                    <input type="hidden" id="id_user" name="user" value="{{ request.user.id }}">
+                </form>
+                
+        </div>
+    </div>
+    {% endblock%}
+

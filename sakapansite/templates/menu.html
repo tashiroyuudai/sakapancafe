@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title%}{{object.title}}{% endblock %}
+        <!-- Page Header-->
+        {% block header%}
+        <!-- Masthead-->
+        <header class="mastheads">
+            <div class="container px-4 px-lg-5 h-100">
+                <div class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center">
+                    <div class="col-lg-8 align-self-end">
+                        <h1 class="text-black font-weight-bold">さかぱんカフェ</h1>
+                        <hr class="divider" />
+                    </div>
+                    <div class="col-lg-8 align-self-baseline">
+                    </div>
+                </div>
+            </div>
+        </header>
+        {% endblock %}
+        {% block content%}
+        <!-- Post Content-->
+        <article class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <h2>Menu</h2>
+                    <hr>
+                    <div>
+                        <h3 class="text-center">メニュー一覧</h3>
+                            <hr>
+                            <table>
+                            {% for record in category %}
+                                <h3 class="text-center">{{record.category}}</h3>
+                                {% for menus in menu %}
+                                {% for men in menus %}
+                                <tr>
+                                    <h5 class="text-center">{{ men.title }}</h5>
+                                    <h5 class="text-center">￥{{ men.price }}</h5>
+                                </tr>
+                                <tr>
+                                </tr>
+                                {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                            </teble>
+                    </div>
+                </div>
+            </div>
+        </article>        
+    {% endblock%}
